@@ -26,7 +26,8 @@ public class CrunchifyQRCode{
 	
 	public static void main(String[] args) {
 		String myCodeText = "https://google.com/";
-		String filePath = "/Users/sanji-kun/Desktop/CrunchifyQR300x300.png";
+		//String filePath = "/Users/sanji-kun/Desktop/CrunchifyQR300x300.png";
+		String filePath = "./output/CrunchifyQR300x300.png";
 		int size = 300;
 		String fileType = "png";
 		File myFile = new File(filePath);

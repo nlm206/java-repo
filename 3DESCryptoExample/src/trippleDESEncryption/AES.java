@@ -2,6 +2,8 @@ package trippleDESEncryption;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.Assert.assertEquals;
+
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -41,8 +43,9 @@ public class AES {
 	
 	@Test
 	public void AES_Test() {
-		System.out.println("\n ------------------------------ ");
-		System.out.println(" >> AES_Test Testing(). \n");
+		System.out.println("\n ------------------------------------------------------------");
+		System.out.println(" >> AES_Test Testing(). ");
+		System.out.println(" ------------------------------------------------------------");
 		
 		String algorithm = "AES"; // DES-EDE Triple-DES
         String transformation = "AES/CBC/NoPadding"; //NoPadding/PKCS1Padding/PKCS5Padding
@@ -68,11 +71,16 @@ public class AES {
 			 * 		b. Construct the appropriate IvParameterSpec object for the data to pass to Cipher's init() method
 			 */
 
-			final int AES_KEYLENGTH = 128;	// change this as desired for the security level you want
+			/*final int AES_KEYLENGTH = 128;	// change this as desired for the security level you want
 			byte[] iv = new byte[AES_KEYLENGTH / 8];	// Save the IV bytes or send it in plaintext with the encrypted data so you can decrypt the data later
 			SecureRandom prng = new SecureRandom();
-			prng.nextBytes(iv);
+			prng.nextBytes(iv);*/
 			
+			byte[] iv = {
+					(byte) 0x9E, (byte) 0xFA, 0x26, (byte) 0xB0, 0x29, 0x43, (byte) 0x89, (byte) 0xF3, 
+					(byte) 0xE7, 0x59, 0x3B, 0x75, (byte) 0xA8, 0x02, 0x03, 0x2B};
+			
+			System.out.println();
 			/**
 			 * Step 3. Create a Cipher by specifying the following parameters
 			 * 		a. Algorithm name - here it is AES 
@@ -97,12 +105,12 @@ public class AES {
 			 */
 			strDataToEncrypt = "Hello World of Encryption using AES 123412341234";
 			byte[] byteDataToEncrypt = strDataToEncrypt.getBytes();
-			byte[] byteCipherText = aesCipherForEncryption
-					.doFinal(byteDataToEncrypt);
+			byte[] byteCipherText = aesCipherForEncryption.doFinal(byteDataToEncrypt);
+			
 			// b64 is done differently on Android
-			strCipherText = new BASE64Encoder().encode(byteCipherText);
-			System.out.println("Cipher Text generated using AES is (" + strCipherText.length() + ")"
-					+ strCipherText);
+			//strCipherText = new BASE64Encoder().encode(byteCipherText);
+			//System.out.println("Cipher Text generated using AES is (" + strCipherText.length() + "):\r\n"
+			//		+ strCipherText);
 
 			/**
 			 * Step 6. Decrypt the Data 
@@ -118,20 +126,24 @@ public class AES {
 			byte[] byteDecryptedText = aesCipherForDecryption
 					.doFinal(byteCipherText);
 			strDecryptedText = new String(byteDecryptedText);
-			System.out
-					.println(" Decrypted Text message is " + strDecryptedText);
+			
+			assertEquals(strDataToEncrypt, strDecryptedText);
+			
+			System.out.println(" Decrypted Text message is: \r\n>>" + strDecryptedText + "\r\n\r\n");
 			
 			System.out.println("INPUT string: (" + byteDataToEncrypt.length + ")");
 	        for (int i = 0; i< byteDataToEncrypt.length; i++) {
-	        	System.out.print((int)(byteDataToEncrypt[i] & 0xFF));
-	        	System.out.print(",");
+	        	System.out.printf("%02X ", (int)(byteDataToEncrypt[i] & 0xFF));
+	        	if ((1 + i) % 16 == 0)
+	        		System.out.print("\r\n");
 	        }
 	        System.out.println("\n");
 	        
 			System.out.println("Encrypted string: (" + byteCipherText.length + ")");
 	        for (int i = 0; i< byteCipherText.length; i++) {
-	        	System.out.print((int)(byteCipherText[i] & 0xFF));
-	        	System.out.print(",");
+	        	System.out.printf("%02X ", (byteCipherText[i] & 0xFF));
+	        	if ((1 + i) % 16 == 0)
+	        		System.out.print("\r\n");
 	        }
 	        System.out.println("\n");
 	        

@@ -57,8 +57,9 @@ public class DES {
 		String strCipherText = new String();
 		String strDecryptedText = new String();
 		
-		System.out.println("\n ------------------------------ ");
-		System.out.println(" >> DES_Test Testing(). \n");
+		System.out.println("\n ------------------------------------------------------------");
+		System.out.println(" >> DES_Test Testing(). ");
+		System.out.println(" ------------------------------------------------------------");
 		
 		try{
 		/**
@@ -75,7 +76,11 @@ public class DES {
 		 * 			c. Padding - PKCS5Padding
 		 */
 		
-		Cipher desCipher = Cipher.getInstance("DES/CBC/PKCS5Padding"); /* Must specify the mode explicitly as most JCE providers default to ECB mode!! */
+		/* Must specify the mode explicitly as most JCE providers default to ECB mode!! 
+		 * NoPadding/ PKCS1Padding/ PKCS5Padding
+		 * */
+		Cipher desCipher = Cipher.getInstance("DES/CBC/PKCS5Padding"); 
+		
 		
 		/**
 		 *  Step 3. Initialize the Cipher for Encryption 
@@ -93,20 +98,27 @@ public class DES {
 		byte[] byteDataToEncrypt = strDataToEncrypt.getBytes();
 		byte[] byteCipherText = desCipher.doFinal(byteDataToEncrypt); 
 		strCipherText = new BASE64Encoder().encode(byteCipherText);
-		System.out.println("Cipher Text generated using DES with CBC mode and PKCS5 Padding is " +strCipherText);
 		
-		System.out.println("INPUT string: (" + byteDataToEncrypt.length + ")");
+		System.out.println(">>Cipher Text generated using DES with CBC mode and PKCS5 Padding is: \r\n" 
+						+ strCipherText + "\r\n");
+		
+		System.out.println(">>INPUT string: (" + byteDataToEncrypt.length + ")");
         for (int i = 0; i< byteDataToEncrypt.length; i++) {
-        	System.out.print((int)(byteDataToEncrypt[i] & 0xFF));
-        	System.out.print(",");
+        	System.out.printf("%02X ", (int)(byteDataToEncrypt[i] & 0xFF));
+
+        	if ((1 + i) % 16 == 0)
+        		System.out.print("\r\n");
         }
         System.out.println("\n");
         
-		System.out.println("Encrypted string: (" + byteCipherText.length + ")");
+		System.out.println(">>Encrypted string: (" + byteCipherText.length + ")");
         for (int i = 0; i< byteCipherText.length; i++) {
-        	System.out.print((int)(byteCipherText[i] & 0xFF));
-        	System.out.print(",");
+        	System.out.printf("%02X ", (int)(byteCipherText[i] & 0xFF));
+
+        	if ((1 + i) % 16 == 0)
+        		System.out.print("\r\n");
         }
+        
         System.out.println("\n");
         
 		/**
@@ -114,12 +126,16 @@ public class DES {
 		 *  		1. Initialize the Cipher for Decryption 
 		 *  		2. Decrypt the cipher bytes using doFinal method 
 		 */
-		desCipher.init(Cipher.DECRYPT_MODE,secretKey,desCipher.getParameters());
+		desCipher.init(Cipher.DECRYPT_MODE, secretKey, desCipher.getParameters());
 		 //desCipher.init(Cipher.DECRYPT_MODE,secretKey);
+		
 		byte[] byteDecryptedText = desCipher.doFinal(byteCipherText);
+		
 		strDecryptedText = new String(byteDecryptedText);
-		System.out.println(" Decrypted Text message is " +strDecryptedText);
-		}
+		
+		System.out.println(">>Decrypted Text message is " +strDecryptedText);
+		
+		} // try
 		
 		catch (NoSuchAlgorithmException noSuchAlgo)
 		{
